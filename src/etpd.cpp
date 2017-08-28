@@ -187,10 +187,13 @@ bool AppInit(int argc, char* argv[])
 
 int main(int argc, char* argv[])
 {
+    printf("Starting enviroinment .\n.");
     SetupEnvironment();
 
     // Connect etpd signal handlers
+    printf("noui-connect ..\n");
     noui_connect();
-
+	
+    printf("AppInit ..\n");
     return (AppInit(argc, argv) ? EXIT_SUCCESS : EXIT_FAILURE);
 }

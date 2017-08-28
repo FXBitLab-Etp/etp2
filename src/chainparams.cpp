@@ -51,8 +51,8 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
  */
 static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
-    const char* pszTimestamp = "Wired 09/Jan/2014 The Grand Experiment Goes Live: Overstock.com Is Now Accepting Bitcoins";
-    const CScript genesisOutputScript = CScript() << ParseHex("040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9") << OP_CHECKSIG;
+    const char* pszTimestamp = "Wired 28/Augt/2017 Haiyaa, finally you success creating genesis block Sayed";
+    const CScript genesisOutputScript = CScript() << ParseHex("04d9bc30a8e9816a6af525f00f4f0b70da9b0faaee6334a2fcc0b16b9c5d5256efd143db3071e29cfeb891aa2420c124167c60ea482fa09dfa7ec4c15d7944ff60") << OP_CHECKSIG;
     return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward);
 }
 
@@ -112,25 +112,41 @@ public:
          * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
          * a large 32-bit integer with any alignment.
          */
-        pchMessageStart[0] = 0xbf;
-        pchMessageStart[1] = 0x0c;
-        pchMessageStart[2] = 0x6b;
-        pchMessageStart[3] = 0xbd;
-        vAlertPubKey = ParseHex("048240a8748a80a286b270ba126705ced4f2ce5a7847b3610ea3c06513150dade2a8512ed5ea86320824683fc0818f0ac019214973e677acd1244f6d0571fc5103");
-        nDefaultPort = 9999;
+	pchMessageStart[0] = 0xdb;
+        pchMessageStart[1] = 0xab;
+        pchMessageStart[2] = 0x66;
+        pchMessageStart[3] = 0x0a;
+        vAlertPubKey = ParseHex("04023b2f70f3ac9904c3674f0f22e578762b4b26229c24f5c1c2f8e3849f040be6b7c10870242711bec3b60f0bb67b64ee6c0bfac00bc74bce618c735570342a3e");
+        nDefaultPort = 7899;
         nMaxTipAge = 6 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in bitcoin
         nPruneAfterHeight = 100000;
 
-        genesis = CreateGenesisBlock(1390095618, 28917698, 0x1e0ffff0, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1503920569, 0, 0x1e0ffff0, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
+	consensus.hashGenesisBlock = uint256S("0x01");
+        if (true && genesis.GetHash() != consensus.hashGenesisBlock)
+        {
+            LogPrintf("recalculating params for mainnet.\n");
+            LogPrintf("old mainnet genesis nonce: %u\n", genesis.nNonce);
+            LogPrintf("old mainnet genesis hash:  %s\n", consensus.hashGenesisBlock.ToString().c_str());
+            // deliberately empty for loop finds nonce value.
+
+            for(genesis.nNonce = 0; genesis.GetHash().GetCheapHash() > consensus.powLimit.GetCheapHash(); genesis.nNonce++){ }
+            LogPrintf("new mainnet genesis merkle root: %s\n", genesis.hashMerkleRoot.ToString().c_str());
+            LogPrintf("new mainnet genesis nonce: %u\n", genesis.nNonce);
+            LogPrintf("new mainnet genesis hash: %s\n", genesis.GetHash().ToString().c_str());
+        }
+
         assert(consensus.hashGenesisBlock == uint256S("0x00000ffd590b1485b3caadc19b22e6379c733355108f107a430458cdf3407ab6"));
         assert(genesis.hashMerkleRoot == uint256S("0xe0028eb9648db56b1ac77cf090b99048a8007e2bb64b68f092c03c7f56a662c7"));
 
+	vFixedSeeds.clear(); //! Regtest mode doesn't have any fixed seeds.
+        vSeeds.clear();  //! Regtest mode doesn't have any DNS seeds.
 
-        vSeeds.push_back(CDNSSeedData("dash.org", "dnsseed.dash.org"));
-        vSeeds.push_back(CDNSSeedData("dashdot.io", "dnsseed.dashdot.io"));
-        vSeeds.push_back(CDNSSeedData("masternode.io", "dnsseed.masternode.io"));
-        vSeeds.push_back(CDNSSeedData("dashpay.io", "dnsseed.dashpay.io"));
+        //vSeeds.push_back(CDNSSeedData("dash.org", "dnsseed.dash.org"));
+        //vSeeds.push_back(CDNSSeedData("dashdot.io", "dnsseed.dashdot.io"));
+        //vSeeds.push_back(CDNSSeedData("masternode.io", "dnsseed.masternode.io"));
+        //vSeeds.push_back(CDNSSeedData("dashpay.io", "dnsseed.dashpay.io"));
 
         // Etp addresses start with 'X'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,76);
@@ -231,24 +247,38 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 1456790400; // March 1st, 2016
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 1493596800; // May 1st, 2017
 
-        pchMessageStart[0] = 0xce;
-        pchMessageStart[1] = 0xe2;
-        pchMessageStart[2] = 0xca;
-        pchMessageStart[3] = 0xff;
-        vAlertPubKey = ParseHex("04517d8a699cb43d3938d7b24faaff7cda448ca4ea267723ba614784de661949bf632d6304316b244646dea079735b9a6fc4af804efb4752075b9fe2245e14e412");
-        nDefaultPort = 19999;
+	pchMessageStart[0] = 0x58;
+        pchMessageStart[1] = 0xde;
+        pchMessageStart[2] = 0x40;
+        pchMessageStart[3] = 0xc7;
+        vAlertPubKey = ParseHex("04023b2f70f3ac9904c3674f0f22e578762b4b26229c24f5c1c2f8e3849f040be6b7c10870242711bec3b60f0bb67b64ee6c0bfac00bc74bce618c735570342a3e");
+        nDefaultPort = 17899;
         nMaxTipAge = 0x7fffffff; // allow mining on top of old blocks for testnet
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1390666206UL, 3861367235UL, 0x1e0ffff0, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1503920569, 0, 0x1e0ffff0, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
+	consensus.hashGenesisBlock = uint256S("0x01");
+        if (true && genesis.GetHash() != consensus.hashGenesisBlock)
+        {
+            LogPrintf("recalculating params for mainnet.\n");
+            LogPrintf("old mainnet genesis nonce: %u\n", genesis.nNonce);
+            LogPrintf("old mainnet genesis hash:  %s\n", consensus.hashGenesisBlock.ToString().c_str());
+            // deliberately empty for loop finds nonce value.
+
+            for(genesis.nNonce = 0; genesis.GetHash().GetCheapHash() > consensus.powLimit.GetCheapHash(); genesis.nNonce++){ }
+            LogPrintf("new mainnet genesis merkle root: %s\n", genesis.hashMerkleRoot.ToString().c_str());
+            LogPrintf("new mainnet genesis nonce: %u\n", genesis.nNonce);
+            LogPrintf("new mainnet genesis hash: %s\n", genesis.GetHash().ToString().c_str());
+        }
+
         assert(consensus.hashGenesisBlock == uint256S("0x00000bafbc94add76cb75e2ec92894837288a481e5c005f6563d91623bf8bc2c"));
         assert(genesis.hashMerkleRoot == uint256S("0xe0028eb9648db56b1ac77cf090b99048a8007e2bb64b68f092c03c7f56a662c7"));
 
         vFixedSeeds.clear();
         vSeeds.clear();
-        vSeeds.push_back(CDNSSeedData("dashdot.io",  "testnet-seed.dashdot.io"));
-        vSeeds.push_back(CDNSSeedData("masternode.io", "test.dnsseed.masternode.io"));
+        //vSeeds.push_back(CDNSSeedData("dashdot.io",  "testnet-seed.dashdot.io"));
+        //vSeeds.push_back(CDNSSeedData("masternode.io", "test.dnsseed.masternode.io"));
 
         // Testnet Etp addresses start with 'y'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,140);
@@ -335,17 +365,32 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 0;
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 999999999999ULL;
+	
+	pchMessageStart[0] = 0x4b;
+        pchMessageStart[1] = 0x0b;
+        pchMessageStart[2] = 0x98;
+        pchMessageStart[3] = 0x7c;
 
-        pchMessageStart[0] = 0xfc;
-        pchMessageStart[1] = 0xc1;
-        pchMessageStart[2] = 0xb7;
-        pchMessageStart[3] = 0xdc;
         nMaxTipAge = 6 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in bitcoin
-        nDefaultPort = 19994;
+        nDefaultPort = 17894;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1417713337, 1096447, 0x207fffff, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1503920569, 0, 0x207fffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
+	consensus.hashGenesisBlock = uint256S("0x01");
+        if (true && genesis.GetHash() != consensus.hashGenesisBlock)
+        {
+            LogPrintf("recalculating params for mainnet.\n");
+            LogPrintf("old mainnet genesis nonce: %u\n", genesis.nNonce);
+            LogPrintf("old mainnet genesis hash:  %s\n", consensus.hashGenesisBlock.ToString().c_str());
+            // deliberately empty for loop finds nonce value.
+
+            for(genesis.nNonce = 0; genesis.GetHash().GetCheapHash() > consensus.powLimit.GetCheapHash(); genesis.nNonce++){ }
+            LogPrintf("new mainnet genesis merkle root: %s\n", genesis.hashMerkleRoot.ToString().c_str());
+            LogPrintf("new mainnet genesis nonce: %u\n", genesis.nNonce);
+            LogPrintf("new mainnet genesis hash: %s\n", genesis.GetHash().ToString().c_str());
+        }
+
         assert(consensus.hashGenesisBlock == uint256S("0x000008ca1832a4baf228eb1553c03d3a2c8e02399550dd6ea8d65cec3ef23d2e"));
         assert(genesis.hashMerkleRoot == uint256S("0xe0028eb9648db56b1ac77cf090b99048a8007e2bb64b68f092c03c7f56a662c7"));
 
